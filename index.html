@@ -11,6 +11,15 @@
 	</head>
 	<body>
 		<script src="game.js"></script>
-		<script>game.run ();</script>
+		<script>
+			game.run ();
+
+			game.canvas.background.draw.style = {color: '#54d266', size: 3};
+			game.canvas.background.draw.line (0, 0, 100, 100);
+
+			game.canvas.background.draw.style = {color: 'black', size: 1};
+			game.canvas.background.draw.line (300, 20, 10, 150);
+			game.canvas.background.draw.circle (500, 300, 50, true);
+		</script>
 	</body>
 </html>
