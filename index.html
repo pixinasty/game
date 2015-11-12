@@ -27,7 +27,10 @@
 			game.canvas.background.draw.box (490, 85, 80, 20, true);
 			game.canvas.background.draw.text = { color: 'white', text: 'Text 123', x: 500, y: 100 };
 
-			game.canvas.background.draw.sprite = { src: 'test.png', x: 400, y: 300 };
+			game.canvas.background.draw.sprite = { src: 'test.png', x: game.random (0, game.canvas.width, true), y: game.random (0, game.canvas.height, true) };
+			
+			game.canvas.background.draw.box (0.4, 0.4, 0.2, 0.2);
+			game.canvas.background.draw.text = { color: 'black', size: 0.12, text: 'START', x: 0.41, y: 0.55 };
 		</script>
 	</body>
 </html>

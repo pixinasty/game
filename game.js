@@ -69,11 +69,11 @@ var game =
 		{
 			var box = {};
 				box.fill = fill;
+				box.h = h;
 				box.type = 'box';
+				box.w = w;
 				box.x = x;
 				box.y = y;
-				box.w = w;
-				box.h = h;
 			this.scene.push (box);
 		},
 
@@ -139,7 +139,7 @@ var game =
 				text.color = (json.color) ? json.color : this.context.fillStyle;
 				text.color0 = this.context.fillStyle;
 				text.font = (json.font) ? json.font : 'Arial';
-				text.size = (json.size) ? json.size : '1em';
+				text.size = (json.size) ? json.size : 12;
 				text.text = json.text;
 				text.type = 'text';
 				text.x = (json.x) ? json.x : 0;
@@ -193,41 +193,58 @@ var game =
 			switch (call.type)
 			{
 				case 'box':
+					var h = game.rel.y (call.h);
+					var w = game.rel.x (call.w);
+					var x = game.rel.x (call.x);
+					var y = game.rel.y (call.y);
 					draw.context.beginPath ();
-					draw.context.rect (call.x, call.y, call.w, call.h);
+					draw.context.rect (x, y, w, h);
 					var fill = (call.fill) ? draw.context.fill () : draw.context.stroke ();
 					break;
 
 				case 'circle':
+					var r = game.rel.s (call.r);
+					var x = game.rel.x (call.x);
+					var y = game.rel.y (call.y);
 					draw.context.beginPath ();
-					draw.context.arc (call.x, call.y, call.r, 0, 2 * Math.PI);
+					draw.context.arc (x, y, r, 0, 2 * Math.PI);
 					var fill = (call.fill) ? draw.context.fill () : draw.context.stroke ();
 					break;
 
 				case 'line':
+					var x0 = game.rel.x (call.x0);
+					var x1 = game.rel.x (call.x1);
+					var y0 = game.rel.y (call.y0);
+					var y1 = game.rel.y (call.y1);
 					draw.context.beginPath ();
-					draw.context.moveTo (call.x0, call.y0);
-					draw.context.lineTo (call.x1, call.y1);
+					draw.context.moveTo (x0, y0);
+					draw.context.lineTo (x1, y1);
 					draw.context.stroke ();
 					break;
 
 				case 'sprite':
+					var h = game.rel.y (call.h);
+					var w = game.rel.x (call.w);
+					var x = game.rel.x (call.x);
+					var y = game.rel.y (call.y);
 					draw.context.beginPath ();
-					draw.context.drawImage (call.image, call.x, call.y, call.w, call.h);
+					draw.context.drawImage (call.image, x, y, w, h);
 					break;
 
 				case 'style':
 					draw.context.beginPath ();
 					draw.context.fillStyle = call.color;
-					draw.context.lineWidth = call.size;
+					draw.context.lineWidth = game.rel.s (call.size);
 					draw.context.strokeStyle = call.color;
 					break;
 
 				case 'text':
+					var x = game.rel.x (call.x);
+					var y = game.rel.y (call.y);
 					draw.context.beginPath ();
-					draw.context.font = call.size + ' ' + call.font;
+					draw.context.font = game.rel.s (call.size) + 'px ' + call.font;
 					draw.context.fillStyle = call.color;
-					draw.context.fillText (call.text, call.x, call.y);
+					draw.context.fillText (call.text, x, y);
 					draw.context.fillStyle = call.color0;
 					break;
 			};
@@ -249,6 +266,25 @@ var game =
 	{
 		var random = (floor) ? Math.floor(Math.random() * (max - min + 1)) + min : Math.random() * (max - min) + min;
 		return random;
+	},
+
+	rel:
+	{
+		s: function (s)
+		{
+			var min = (game.canvas.height < game.canvas.width) ? game.canvas.height : game.canvas.width;
+			return ((s < 1) && (s > 0)) ? Math.floor (s * min) : s;
+		},
+	
+		x: function (x)
+		{
+			return ((x < 1) && (x > 0)) ? Math.floor (x * game.canvas.width) : x;
+		},
+		
+		y: function (y)
+		{
+			return ((y <=1) && (y > 0)) ? Math.floor (y * game.canvas.height) : y;
+		}
 	},
 
 	run: function ()
