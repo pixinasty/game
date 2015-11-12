@@ -65,6 +65,18 @@ var game =
 
 	draw:
 	{
+		box: function (x, y, w, h, fill)
+		{
+			var box = {};
+				box.fill = fill;
+				box.type = 'box';
+				box.x = x;
+				box.y = y;
+				box.w = w;
+				box.h = h;
+			this.scene.push (box);
+		},
+
 		circle: function (x, y, r, fill)
 		{
 			var circle = {};
@@ -89,6 +101,29 @@ var game =
 
 		scene: [],
 
+		set sprite (json)
+		{
+			var sprite = {};
+				sprite.src = json.src;
+				sprite.type = 'sprite';
+				sprite.x = json.x;
+				sprite.y = json.y;
+
+			var scene = this.scene;
+
+			var image = new Image ();
+				image.src = json.src;
+
+				image.onload = function ()
+				{
+					sprite.h = (json.h) ? json.h : image.height;
+					sprite.image = image;
+					sprite.w = (json.w) ? json.w : image.width;
+
+					scene.push (sprite);
+				};
+		},
+
 		set style (json)
 		{
 			var style = {};
@@ -96,6 +131,20 @@ var game =
 				style.type = 'style';
 				style.size = json.size;
 			this.scene.push (style);
+		},
+
+		set text (json)
+		{
+			var text = {};
+				text.color = (json.color) ? json.color : this.context.fillStyle;
+				text.color0 = this.context.fillStyle;
+				text.font = (json.font) ? json.font : 'Arial';
+				text.size = (json.size) ? json.size : '1em';
+				text.text = json.text;
+				text.type = 'text';
+				text.x = (json.x) ? json.x : 0;
+				text.y = (json.y) ? json.y : 0;
+			this.scene.push (text);
 		}
 	},
 
@@ -143,6 +192,12 @@ var game =
 			var call = draw.scene[i];
 			switch (call.type)
 			{
+				case 'box':
+					draw.context.beginPath ();
+					draw.context.rect (call.x, call.y, call.w, call.h);
+					var fill = (call.fill) ? draw.context.fill () : draw.context.stroke ();
+					break;
+
 				case 'circle':
 					draw.context.beginPath ();
 					draw.context.arc (call.x, call.y, call.r, 0, 2 * Math.PI);
@@ -156,10 +211,24 @@ var game =
 					draw.context.stroke ();
 					break;
 
+				case 'sprite':
+					draw.context.beginPath ();
+					draw.context.drawImage (call.image, call.x, call.y, call.w, call.h);
+					break;
+
 				case 'style':
+					draw.context.beginPath ();
 					draw.context.fillStyle = call.color;
 					draw.context.lineWidth = call.size;
 					draw.context.strokeStyle = call.color;
+					break;
+
+				case 'text':
+					draw.context.beginPath ();
+					draw.context.font = call.size + ' ' + call.font;
+					draw.context.fillStyle = call.color;
+					draw.context.fillText (call.text, call.x, call.y);
+					draw.context.fillStyle = call.color0;
 					break;
 			};
 		};

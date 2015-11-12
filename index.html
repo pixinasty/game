@@ -14,12 +14,20 @@
 		<script>
 			game.run ();
 
-			game.canvas.background.draw.style = {color: '#54d266', size: 3};
+			game.canvas.background.draw.style = { color: '#54d266', size: 3 };
 			game.canvas.background.draw.line (0, 0, 100, 100);
 
-			game.canvas.background.draw.style = {color: 'black', size: 1};
+			game.canvas.background.draw.style = { color: 'blue', size: 1 };
 			game.canvas.background.draw.line (300, 20, 10, 150);
+
+			game.canvas.background.draw.style = { color: 'red' };
 			game.canvas.background.draw.circle (500, 300, 50, true);
+
+			game.canvas.background.draw.style = { color: 'black'};
+			game.canvas.background.draw.box (490, 85, 80, 20, true);
+			game.canvas.background.draw.text = { color: 'white', text: 'Text 123', x: 500, y: 100 };
+
+			game.canvas.background.draw.sprite = { src: 'test.png', x: 400, y: 300 };
 		</script>
 	</body>
 </html>
