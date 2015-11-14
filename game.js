@@ -56,6 +56,7 @@ var game =
 				button.color = (object.color) ? object.color : '#fff';
 				button.h = object.h;
 				button.hide = false;
+				button.image = object.image;
 				button.layer = (object.layer) ? (object.layer) : 'background';
 				button.r = object.r;
 				button.text = {};
@@ -66,6 +67,8 @@ var game =
 				button.x = object.x;
 				button.y = object.y;
 
+			//TODO: добавить систему очистки объектов scene game.canvas.clear (name)
+			//TODO: добавить в конструктор canvas возможность создавать его в любом объекте, а не только в window
 				button.click = function ()
 				{
 					if (game.event.type == 'mousedown')
@@ -86,24 +89,29 @@ var game =
 
 				button.show = function ()
 				{
+					if (game.event.type == 'resize')
+					{
+						button.hide = false;
+					};
+
 					if (!button.hide)
 					{
 						switch (button.type)
 						{
 							case 'box':
-								var h = game.rel.y (button.h);
-								var w = game.rel.x (button.w);
-								var x = game.rel.x (button.x);
-								var y = game.rel.y (button.y);
+								var h = button.h;
+								var w = button.w;
+								var x = button.x;
+								var y = button.y;
 								game.canvas[button.layer].draw.box (x, y, w, h, true);
 
-								var size = game.rel.y (h);
-								game.canvas[button.layer].context.font = size + 'px Arial';
+								//TODO: вынести в отдельный метод, добавить метод очистки элемента по id или name.
+								var size = h;
+								game.canvas[button.layer].context.font = game.rel.y (size) + 'px Arial';
 								var width = game.canvas[button.layer].context.measureText(button.text.text).width;
-								game.log = width;
-								for (size; w < width; size--)
+								for (size; game.rel.x (w) < width; size -= 0.001)
 								{
-									game.canvas[button.layer].context.font = size + 'px Arial';
+									game.canvas[button.layer].context.font = game.rel.y (size) + 'px Arial';
 									width = game.canvas[button.layer].context.measureText(button.text.text).width;
 								};
 
@@ -120,6 +128,23 @@ var game =
 								break;
 
 							case 'circle':
+								break;
+
+							case 'sprite':
+								var image = button.image;
+								var h = button.h;
+								var w = button.w;
+								var x = button.x;
+								var y = button.y;
+								
+								game.canvas.background.draw.sprite =
+								{
+									h: h,
+									src: image,
+									w: w,
+								 	x: x,
+									y: y,
+								};
 								break;
 						};
 						button.hide = true;
