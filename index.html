@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="utf-8" />
 		<style>
 			body
 			{
@@ -28,9 +29,20 @@
 			game.canvas.background.draw.text = { color: 'white', text: 'Text 123', x: 500, y: 100 };
 
 			game.canvas.background.draw.sprite = { src: 'test.png', x: game.random (0, game.canvas.width, true), y: game.random (0, game.canvas.height, true) };
-			
+
 			game.canvas.background.draw.box (0.4, 0.4, 0.2, 0.2);
 			game.canvas.background.draw.text = { color: 'black', size: 0.12, text: 'START', x: 0.41, y: 0.55 };
+
+			game.create.button =
+			{
+				action: function () { game.log = 'clicked'; },
+				color: '#94a',
+				h: 0.1,
+				text: { color: '#f00', text: 'Это кнопка бла бла блаваппывп' },
+				w: 0.2,
+				x: 0.1,
+				y: 0.1
+			};
 		</script>
 	</body>
 </html>

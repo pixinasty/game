@@ -49,6 +49,91 @@ var game =
 
 	create:
 	{
+		set button (object)
+		{
+			var button = {};
+				button.action = object.action;
+				button.color = (object.color) ? object.color : '#fff';
+				button.h = object.h;
+				button.hide = false;
+				button.layer = (object.layer) ? (object.layer) : 'background';
+				button.r = object.r;
+				button.text = {};
+				button.text.color = (object.text.color) ? object.text.color : '#000';
+				button.text.text = object.text.text;
+				button.type = (object.type) ? object.type : 'box';
+				button.w = object.w;
+				button.x = object.x;
+				button.y = object.y;
+
+				button.click = function ()
+				{
+					if (game.event.type == 'mousedown')
+					{
+						var h = game.rel.y (button.h);
+						var w = game.rel.x (button.w);
+						var x = game.rel.x (button.x);
+						var y = game.rel.y (button.y);
+						if ((game.event.x >= x) && (game.event.x <= x + w))
+						{
+							if ((game.event.y >= y) && (game.event.y <= y + h))
+							{
+								button.action ();
+							};
+						};
+					};
+				};
+
+				button.show = function ()
+				{
+					if (!button.hide)
+					{
+						switch (button.type)
+						{
+							case 'box':
+								var h = game.rel.y (button.h);
+								var w = game.rel.x (button.w);
+								var x = game.rel.x (button.x);
+								var y = game.rel.y (button.y);
+								game.canvas[button.layer].draw.box (x, y, w, h, true);
+
+								var size = game.rel.y (h);
+								game.canvas[button.layer].context.font = size + 'px Arial';
+								var width = game.canvas[button.layer].context.measureText(button.text.text).width;
+								game.log = width;
+								for (size; w < width; size--)
+								{
+									game.canvas[button.layer].context.font = size + 'px Arial';
+									width = game.canvas[button.layer].context.measureText(button.text.text).width;
+								};
+
+								game.canvas.background.draw.text =
+								{
+									align: 'center',
+									baseline: 'middle',
+									color: button.text.color,
+									size: size,
+									text: button.text.text,
+									x: x + w/2,
+									y: y + h/2
+								};
+								break;
+
+							case 'circle':
+								break;
+						};
+						button.hide = true;
+					};
+				};
+
+				button.update = function ()
+				{
+					button.click ();
+					button.show ();
+				};
+			game.input.push (button);
+		},
+
 		set canvas (object)
 		{
 			var canvas = window.document.createElement ('canvas');
@@ -101,54 +186,66 @@ var game =
 
 		scene: [],
 
-		set sprite (json)
+		set sprite (object)
 		{
 			var sprite = {};
-				sprite.src = json.src;
+				sprite.src = object.src;
 				sprite.type = 'sprite';
-				sprite.x = json.x;
-				sprite.y = json.y;
+				sprite.x = object.x;
+				sprite.y = object.y;
 
 			var scene = this.scene;
 
 			var image = new Image ();
-				image.src = json.src;
+				image.src = object.src;
 
 				image.onload = function ()
 				{
-					sprite.h = (json.h) ? json.h : image.height;
+					sprite.h = (object.h) ? object.h : image.height;
 					sprite.image = image;
-					sprite.w = (json.w) ? json.w : image.width;
+					sprite.w = (object.w) ? object.w : image.width;
 
 					scene.push (sprite);
 				};
 		},
 
-		set style (json)
+		set style (object)
 		{
 			var style = {};
-				style.color = json.color;
+				style.color = object.color;
 				style.type = 'style';
-				style.size = json.size;
+				style.size = object.size;
 			this.scene.push (style);
 		},
 
-		set text (json)
+		set text (object)
 		{
 			var text = {};
-				text.color = (json.color) ? json.color : this.context.fillStyle;
+				text.align = (object.align) ? object.align : 'left';
+				text.baseline = (object.baseline) ? object.baseline : 'alphabetic';
+				text.color = (object.color) ? object.color : this.context.fillStyle;
 				text.color0 = this.context.fillStyle;
-				text.font = (json.font) ? json.font : 'Arial';
-				text.size = (json.size) ? json.size : 12;
-				text.text = json.text;
+				text.font = (object.font) ? object.font : 'Arial';
+				text.size = (object.size) ? object.size : 12;
+				text.text = object.text;
 				text.type = 'text';
-				text.x = (json.x) ? json.x : 0;
-				text.y = (json.y) ? json.y : 0;
+				text.x = (object.x) ? object.x : 0;
+				text.y = (object.y) ? object.y : 0;
 			this.scene.push (text);
 		}
 	},
 
 	event: {},
+
+	input: [],
+
+	interface: function ()
+	{
+		for (var i = 0; i < game.input.length; i++)
+		{
+			game.input[i].update ();
+		};
+	},
 
 	listener: function (event)
 	{
@@ -244,6 +341,8 @@ var game =
 					draw.context.beginPath ();
 					draw.context.font = game.rel.s (call.size) + 'px ' + call.font;
 					draw.context.fillStyle = call.color;
+					draw.context.textAlign = call.align;
+					draw.context.textBaseline = call.baseline;
 					draw.context.fillText (call.text, x, y);
 					draw.context.fillStyle = call.color0;
 					break;
@@ -275,12 +374,12 @@ var game =
 			var min = (game.canvas.height < game.canvas.width) ? game.canvas.height : game.canvas.width;
 			return ((s < 1) && (s > 0)) ? Math.floor (s * min) : s;
 		},
-	
+
 		x: function (x)
 		{
 			return ((x < 1) && (x > 0)) ? Math.floor (x * game.canvas.width) : x;
 		},
-		
+
 		y: function (y)
 		{
 			return ((y <=1) && (y > 0)) ? Math.floor (y * game.canvas.height) : y;
@@ -298,10 +397,7 @@ var game =
 	update: function ()
 	{
 		game.canvas.resize ();
-
-		game.log = game.event.type; //debug
-		window.document.title = (game.event.type == 'tick') ? game.event.time/1000 : window.document.title; //debug
-
+		game.interface ();
 		game.paint ();
 	}
 };
