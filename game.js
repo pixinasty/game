@@ -58,6 +58,7 @@ var game =
 				button.hide = false;
 				button.image = object.image;
 				button.layer = (object.layer) ? (object.layer) : 'background';
+				button.name = object.name;
 				button.r = object.r;
 				button.text = {};
 				button.text.color = (object.text.color) ? object.text.color : '#000';
@@ -67,7 +68,6 @@ var game =
 				button.x = object.x;
 				button.y = object.y;
 
-			//TODO: добавить систему очистки объектов scene game.canvas.clear (name)
 			//TODO: добавить в конструктор canvas возможность создавать его в любом объекте, а не только в window
 				button.click = function ()
 				{
@@ -91,6 +91,7 @@ var game =
 				{
 					if (game.event.type == 'resize')
 					{
+						game.canvas[button.layer].clear (button.name);
 						button.hide = false;
 					};
 
@@ -103,7 +104,7 @@ var game =
 								var w = button.w;
 								var x = button.x;
 								var y = button.y;
-								game.canvas[button.layer].draw.box (x, y, w, h, true);
+								game.canvas[button.layer].draw.box (x, y, w, h, true, button.name);
 
 								//TODO: вынести в отдельный метод, добавить метод очистки элемента по id или name.
 								var size = h;
@@ -120,6 +121,7 @@ var game =
 									align: 'center',
 									baseline: 'middle',
 									color: button.text.color,
+									name: button.name,
 									size: size,
 									text: button.text.text,
 									x: x + w/2,
@@ -136,7 +138,7 @@ var game =
 								var w = button.w;
 								var x = button.x;
 								var y = button.y;
-								
+
 								game.canvas.background.draw.sprite =
 								{
 									h: h,
@@ -162,6 +164,24 @@ var game =
 		set canvas (object)
 		{
 			var canvas = window.document.createElement ('canvas');
+
+				canvas.clear = function (name)
+				{
+					var scene = this.draw.scene;
+					if (scene)
+					{
+						var clear = [];
+						for (var i = 0; i < scene.length; i++)
+						{
+							if (scene[i].name != name)
+							{
+								clear.push (scene[i]);
+							};
+						};
+						this.draw.scene = clear;
+					};
+				};
+
 				canvas.context = canvas.getContext ('2d');
 				canvas.draw = game.draw;
 				canvas.draw.context = canvas.context;
@@ -175,11 +195,12 @@ var game =
 
 	draw:
 	{
-		box: function (x, y, w, h, fill)
+		box: function (x, y, w, h, fill, name)
 		{
 			var box = {};
 				box.fill = fill;
 				box.h = h;
+				box.name = name;
 				box.type = 'box';
 				box.w = w;
 				box.x = x;
@@ -187,10 +208,11 @@ var game =
 			this.scene.push (box);
 		},
 
-		circle: function (x, y, r, fill)
+		circle: function (x, y, r, fill, name)
 		{
 			var circle = {};
 				circle.fill = fill;
+				circle.name = name;
 				circle.r = r;
 				circle.type = 'circle';
 				circle.x = x;
@@ -198,9 +220,10 @@ var game =
 			this.scene.push (circle);
 		},
 
-		line: function (x0, y0, x1, y1)
+		line: function (x0, y0, x1, y1, name)
 		{
 			var line = {};
+				line.name = name;
 				line.type = 'line';
 				line.x0 = x0;
 				line.x1 = x1;
@@ -214,6 +237,7 @@ var game =
 		set sprite (object)
 		{
 			var sprite = {};
+				sprite.name = object.name;
 				sprite.src = object.src;
 				sprite.type = 'sprite';
 				sprite.x = object.x;
@@ -238,6 +262,7 @@ var game =
 		{
 			var style = {};
 				style.color = object.color;
+				style.name = object.name;
 				style.type = 'style';
 				style.size = object.size;
 			this.scene.push (style);
@@ -251,6 +276,7 @@ var game =
 				text.color = (object.color) ? object.color : this.context.fillStyle;
 				text.color0 = this.context.fillStyle;
 				text.font = (object.font) ? object.font : 'Arial';
+				text.name = object.name;
 				text.size = (object.size) ? object.size : 12;
 				text.text = object.text;
 				text.type = 'text';
