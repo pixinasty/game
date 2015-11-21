@@ -60,7 +60,7 @@ var game =
 				button.layer = (object.layer) ? (object.layer) : 'background';
 				button.name = object.name;
 				button.r = object.r;
-				button.text = {};
+				button.text = {}; object.text = (object.text) ? object.text : {};
 				button.text.color = (object.text.color) ? object.text.color : '#000';
 				button.text.text = object.text.text;
 				button.type = (object.type) ? object.type : 'box';
@@ -134,6 +134,7 @@ var game =
 
 							case 'sprite':
 								var image = button.image;
+
 								var h = button.h;
 								var w = button.w;
 								var x = button.x;
