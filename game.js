@@ -320,12 +320,14 @@ var game =
 		if (game.mode.type != '')
 		{
 			game.mode[game.mode.type]();
-			game.mode.type = '';	
+			game.mode.type = (game.mode.change) ? (game.mode.change) : '';
+			game.mode.change = '';	
 		};
 	},
 
 	mode:
 	{
+		change: '',
 		type: ''
 	},
 	
