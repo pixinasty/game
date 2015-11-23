@@ -63,7 +63,7 @@ var game =
 				button.text = {}; object.text = (object.text) ? object.text : {};
 				button.text.color = (object.text.color) ? object.text.color : '#000';
 				button.text.text = object.text.text;
-				button.type = (object.type) ? object.type : 'box';
+				button.type = (object.image) ? 'sprite' : 'box';
 				button.w = object.w;
 				button.x = object.x;
 				button.y = object.y;
