@@ -189,7 +189,6 @@ var game =
 				canvas.height = window.innerHeight;
 				canvas.id = (object.id) ? object.id : 'background';
 				canvas.style.position = 'absolute';
-				canvas.style.zIndex = (object.layer) ? object.layer : 0;
 				canvas.width = window.innerWidth;
 			game.canvas[canvas.id] = canvas;
 			window.document.body.appendChild (canvas);
