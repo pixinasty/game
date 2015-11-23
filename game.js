@@ -443,17 +443,17 @@ var game =
 		s: function (s)
 		{
 			var min = (game.canvas.height < game.canvas.width) ? game.canvas.height : game.canvas.width;
-			return ((s < 1) && (s > 0)) ? Math.floor (s * min) : s;
+			return ((s <= 1) && (s >= 0)) ? Math.floor (s * min) : s;
 		},
 
 		x: function (x)
 		{
-			return ((x < 1) && (x > 0)) ? Math.floor (x * game.canvas.width) : x;
+			return ((x <= 1) && (x >= 0)) ? Math.floor (x * game.canvas.width) : x;
 		},
 
 		y: function (y)
 		{
-			return ((y <=1) && (y > 0)) ? Math.floor (y * game.canvas.height) : y;
+			return ((y <=1) && (y >= 0)) ? Math.floor (y * game.canvas.height) : y;
 		}
 	},
 
