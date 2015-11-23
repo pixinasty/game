@@ -313,6 +313,20 @@ var game =
 		};
 	},
 
+	logic: function ()
+	{
+		if (game.mode.type != '')
+		{
+			game.mode[game.mode.type]();
+			game.mode.type = '';	
+		};
+	},
+
+	mode:
+	{
+		type: ''
+	},
+	
 	option:
 	{
 		interval: 1000
@@ -320,6 +334,7 @@ var game =
 
 	paint: function ()
 	{
+		game.canvas.resize ();
 		for (var id in game.canvas)
 		{
 			switch (id)
@@ -448,7 +463,7 @@ var game =
 
 	update: function ()
 	{
-		game.canvas.resize ();
+		game.logic ();
 		game.interface ();
 		game.paint ();
 	}

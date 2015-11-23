@@ -35,11 +35,11 @@
 
 			game.create.button =
 			{
-				action: function () { game.log = 'clicked'; },
+				action: function () { game.mode.type = 'one'; },
 				color: '#94a',
 				h: 0.1,
 				name: 'test_button',
-				text: { color: '#f00', text: 'Press me' },
+				text: { color: '#f00', text: 'Game mode one' },
 				w: 0.2,
 				x: 0.1,
 				y: 0.1
@@ -47,7 +47,7 @@
 
 			game.create.button =
 			{
-				action: function () { game.log = 'clicked 2'; },
+				action: function () { game.mode.type = 'zero'; },
 				h: 20,
 				image: 'button.png',
 				name: 'button',
@@ -55,6 +55,16 @@
 				w: 100,
 				x: 0.4,
 				y: 0.1
+			};
+			
+			game.mode.one = function ()
+			{
+				game.log = 'one mode';
+			};
+			
+			game.mode.zero = function ()
+			{
+				game.log = 'zero mode';
 			};
 		</script>
 	</body>
